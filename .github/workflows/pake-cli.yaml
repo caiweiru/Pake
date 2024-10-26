@@ -1,149 +1,149 @@
-name: Build App With Pake CLI
-on:
-  workflow_dispatch:
-    inputs:
-      platform:
-        description: 'platform'
-        required: true
-        default: 'macos-latest'
-        type: choice
-        options:
-          - 'windows-latest'
-          - 'macos-latest'
+姓名：名称：使用Pake CLI构建应用程序
+在：
+  工作流程_调度：
+    输入：
+      平台：
+        描述：“平台”
+        简单：真实
+        默认值：'macos-最新'
+        类型：选择
+        选项：
+          - “Windows-最新”
+          - 'macos-最新'
           - 'ubuntu-20.04'
-      url:
-        description: '[URL]'
-        required: true
-      name:
-        description: '[Name]'
-        required: true
-      icon:
-        description: '[Icon, Optional]'
-        required: false
-      width:
-        description: '[Width, Optional]'
-        required: false
-        default: '1200'
-      height:
-        description: '[Height, Optional]'
-        required: false
-        default: '780'
-      safe_domain:
-        description: '[Safe Domain, Optional]'
-        required: false
-      hide_title_bar:
-        description: '[Hide TitleBar, Optional, MacOS only]'
-        required: false
-        type: boolean
-        default: false
-      multi_arch:
-        description: '[MultiArch, Optional, MacOS only]'
-        required: false
-        type: boolean
-        default: false
-      targets:
-        description: '[Targets, Optional, Linux only]'
-        required: false
-        default: 'deb'
-        type: choice
-        options:
-          - 'deb'
-          - 'appimage'
-          - 'all'
+      网址：
+        描述：'[URL]'
+        简单：真实
+      姓名：
+        描述：'[名称]'
+        简单：真实
+      图标：
+: '[图标，任选]'
+        简单地说：假
+      宽度：
+        描述: '[宽度，任选]'
+        简单地说：假
+        默认值：“1200”
+      高度：
+        描述: '[高度，任选]'
+        简单地说：假
+        默认值：“780”
+      安全域：
+        描述：“ [安全域，可选】 ”
+        简单地说：假
+      隐藏标题栏：
+        描述: '[隐藏标题栏，可选，仅限MacOS]'
+        简单地说：假
+        类型： 类型：布尔值
+        默认值：假
+      多架构：
+        描述: '[MultiArch，可选，仅限 MacOS]'
+        简单地说：假
+        类型： 类型：布尔值
+        默认值：假
+      目标：
+        描述: '[目标，可选，仅限 Linux]'
+        简单地说：假
+        默认值：“deb”
+        类型： 类型：选择
+        选项：
+          - “德布”
+          - '应用程序图像'
+          - “全部”
 
-jobs:
-  build:
-    name: ${{ inputs.platform }}
-    runs-on: ${{ inputs.platform }}
-    strategy:
-      fail-fast: false
+职位：
+  建造者：
+    名称：{        { input.platform }          }    名称：$ {         { input.platform }         }
+    运行于：{          { input.platform }          }    运行：$ {        { inputs.platform }      }
+    战略：
+      快速失败：false
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    步骤：
+      -名称：签出存储库
+        用途： 使用：actions/checkout@v3
 
-      - name: Install node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      -姓名： - 名称：安装节点
+        用途： 使用：actions/setup-node@v3
+        和：
+          节点版本：18
 
-      - name: Install Rust for ubuntu-20.04
-        if: inputs.platform == 'ubuntu-20.04'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          target: x86_64-unknown-linux-musl
+      -姓名： - 名称：为 ubuntu-20.04 安装 Rust
+        如果： 如果：inputs.platform == 'ubuntu-20.04' 'ubuntu -20.04' 'ubuntu-20.04' 'ubuntu -20.04''ubuntu-20.04' 'ubuntu -20.04' 'ubuntu-20.04'  'ubuntu -20.04'
+        用途： 使用：dtolnay/rust-toolchain@stable
+        和：
+          工具链： 工具链：稳定
+          目标： 目标：x86_64-unknown-linux-musl
 
-      - name: Install Rust for windows-latest
-        if: inputs.platform == 'windows-latest'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable-x86_64-msvc
-          target: x86_64-pc-windows-msvc
+      -姓名： - 名称：安装 Rust for windows-latest
+        if        if : if : input.platform == 'windows-latest' 'windows-latest' if : if : input.platform == 'windows-latest' 'windows-latest':            if : input.platform == 'windows-latest'  'windows-latest'         if : if : input.platform == 'windows-latest'  'windows-latest' 
+        用途： 使用：dtolnay/rust-toolchain@stable
+        和：
+          工具链： stable-x86_64-msvc
+          目标： x86_64-pc-windows-msvc
 
-      - name: Install Rust for macos-latest
-        if: inputs.platform == 'macos-latest'
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          target: x86_64-apple-darwin
+      -                     - - - name : 为 macos-latest 安装 Rust
+        if if        if if : input.platform == 'macos-latest' : input.platform == 'macos-latest' if if : input.platform == 'macos-latest' : input.platform == 'macos-latest': input.platform == 'macos-latest'  : input.platform == 'macos-latest'         if if : input.platform == 'macos-latest'  : input.platform == 'macos-latest' 
+        使用： dtolnay/rust-toolchain@stable
+        和：
+          工具链：稳定
+          目标： x86_64-apple-darwin
 
-      - name: Install dependencies (ubuntu only)
-        if: inputs.platform == 'ubuntu-20.04'
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev gnome-video-effects gnome-video-effects-extra
-          version: 1.1
+      -                   - - - 名称：依赖项（仅限ubuntu）
+        如果： input.platform == 'ubuntu-20.04''ubuntu-20.04''ubuntu-20.04' 'ubuntu-20.04''ubuntu-20.04''ubuntu-20.04''ubuntu-20.04' 'ubuntu-20.04'
+        使用： awalsh128/cache-apt-pkgs-action@latest
+        和：
+          软件包： libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev gnome-video-effects gnome-video-effects-extra
+          版本：1.1
 
-      - name: Install pake-cli local
-        shell: bash
-        run: |
-          echo "install pake on local"
-          npm install pake-cli
+      -            - - name :安装 pake-cli 本地
+        外壳： bash
+        运行：|
+          echo“在本地安装pake”
+          npm 安装 pake-cli
 
-      - name: Rust cache restore
-        uses: actions/cache/restore@v3
-        id: cache_store
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
+      -名称：Rust服务器恢复
+        使用： actions/cache/restore@v3
+        id : 存储存储
+        和：
+          路径：|
+            〜/.cargo/bin/
+            〜/.cargo/registry/index/
+            〜/.cargo/registry/cache/
+            〜/.cargo/git/db/
             node_modules/pake-cli/src-tauri/target/
-          key: ${{ inputs.platform }}-cargo-${{ hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock') }}
+          key:           密钥：${{inputs.platform}}-cargo-${{hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock')}}{{ inputs.platform }}-cargo-${{ hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock') }}
 
-      - name: Install dependencies
+      - name:       - 名称：安装依赖项
         run: |
           npm install shelljs
           npm install axios
 
-      - name: Build with pake-cli
+      - name:       - 名称：使用 pake-cli 构建
         run: |
           node ./script/build_with_pake_cli.js
         env:
-          URL: ${{ inputs.url }}
-          NAME: ${{ inputs.name }}
-          ICON: ${{ inputs.icon }}
-          HEIGHT: ${{ inputs.height }}
-          WIDTH: ${{ inputs.width }}
-          HIDE_TITLE_BAR: ${{ inputs.hide_title_bar }}
-          FULLSCREEN: ${{ inputs.fullscreen }}
-          RESIZE: ${{ inputs.resize }}
-          MULTI_ARCH: ${{ inputs.multi_arch }}
-          TARGETS: ${{ inputs.targets }}
-          SAFE_DOMAIN: ${{ inputs.safe_domain }}
+          URL:           网址：${{inputs.url}}{{ inputs.url }}
+          NAME:           名称：${{inputs.name}}{{ inputs.name }}
+          ICON:           图标：${{inputs.icon}}{{ inputs.icon }}
+          HEIGHT:           高度：${{inputs.height}}{{ inputs.height }}
+          WIDTH:           宽度：${{inputs.width}}{{ inputs.width }}
+          HIDE_TITLE_BAR:           HIDE_TITLE_BAR：${{inputs.hide_title_bar}}{{ inputs.hide_title_bar }}
+          FULLSCREEN:           全屏：${{inputs.fullscreen}}{{ inputs.fullscreen }}
+          RESIZE:           调整大小：${{inputs.resize}}{{ inputs.resize }}
+          MULTI_ARCH:           MULTI_ARCH：${{inputs.multi_arch}}{{ inputs.multi_arch }}
+          TARGETS:           目标：${{inputs.targets}}{{ inputs.targets }}
+          SAFE_DOMAIN:           SAFE_DOMAIN：${{inputs.safe_domain}}{{ inputs.safe_domain }}
 
-      - name: Upload archive
-        uses: actions/upload-artifact@v3
+      - name:       - 名称：上传存档
+        uses:         使用：actions/upload-artifact@v3
         with:
-          name: output-${{ inputs.platform }}.zip
-          path: node_modules/pake-cli/output/
+          name:           名称：输出-${{inputs.platform}}.zip{{ inputs.platform }}.zip
+          path:           路径：node_modules/pake-cli/output/*
           retention-days: 3
 
-      - name: Rust cache store
-        uses: actions/cache/save@v3
-        if: steps.cache_store.outputs.cache-hit != 'true'
+      - name:       - 名称：Rust 缓存存储
+        uses:         使用：actions/cache/save@v3
+        if:         如果：steps.cache_store.outputs.cache-hit != 'true''true'
         with:
           path: |
             ~/.cargo/bin/
@@ -151,4 +151,4 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             node_modules/pake-cli/src-tauri/target/
-          key: ${{ inputs.platform }}-cargo-${{ hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock') }}
+          key:           密钥：${{inputs.platform}}-cargo-${{hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock')}}{{ inputs.platform }}-cargo-${{ hashFiles('node_modules/pake-cli/src-tauri/Cargo.lock') }}
